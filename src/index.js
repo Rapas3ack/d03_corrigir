@@ -8,7 +8,7 @@ app.use(express.json());
 
 const repositories = [];
 
-app.get("/repositories", (response) => {
+app.get("/repositories", (request, response) => {
   return response.json(repositories);
 });
 
@@ -32,17 +32,17 @@ app.put("/repositories/:id", (request, response) => {
   const { title, url, techs } = request.body
   const { id } = request.params;
 
-  const repository = repositories.find(repository => repository.id === id);
+  const repositoryExists = repositories.find(repository => repository.id === id);
 
-  if (!repository) {
+  if (!repositoryExists) {
     return response.status(404).json({ error: "Repository not found" });
   }
 
-  repository.title = title;
-  repository.url = url;
-  repository.techs = techs;
+  repositoryExists.title = title;
+  repositoryExists.url = url;
+  repositoryExists.techs = techs;
 
-  return response.json(repository);
+  return response.json(repositoryExists);
 });
 
 app.delete("/repositories/:id", (request, response) => {

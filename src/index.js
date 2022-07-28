@@ -8,7 +8,7 @@ app.use(express.json());
 
 const repositories = [];
 
-app.get("/repositories", (request, response) => {
+app.get("/repositories", (response) => {
   return response.json(repositories);
 });
 
@@ -22,6 +22,8 @@ app.post("/repositories", (request, response) => {
     techs,
     likes: 0
   };
+
+  repositories.push(repository);
 
   return response.status(201).json(repository);
 });
@@ -46,7 +48,7 @@ app.put("/repositories/:id", (request, response) => {
 app.delete("/repositories/:id", (request, response) => {
   const { id } = request.params;
 
-  repositoryIndex = repositories.findIndex(repository => repository.id === id);
+  const repositoryIndex = repositories.findIndex(repository => repository.id === id);
 
   if (repositoryIndex < 0) {
     return response.status(404).json({ error: "Repository not found" });
@@ -60,14 +62,15 @@ app.delete("/repositories/:id", (request, response) => {
 app.post("/repositories/:id/like", (request, response) => {
   const { id } = request.params;
 
-  repositoryIndex = repositories.findIndex(repository => repository.id === id);
+  const repositoryIndex = repositories.findIndex(repository => repository.id === id);
 
   if (repositoryIndex < 0) {
     return response.status(404).json({ error: "Repository not found" });
   }
 
-  repositories[repositoryIndex].likes += 1;
-  const like = repositories[repositoryIndex];
+  ++repositories[repositoryIndex].likes
+
+  const like = repositories[repositoryIndex]
 
   return response.json(like);
 });
